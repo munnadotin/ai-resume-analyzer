@@ -66,16 +66,16 @@ const preparationPlanSchema = new mongoose.Schema({
     day: {
         type: Number,
         required: [true, "Day is required"]
-    }, 
+    },
     focus: {
         type: String,
         required: [true, "Focus is required"]
-    }, 
+    },
     tasks: {
-        type: String, 
+        type: String,
         required: [true, "Tasks are required"]
     }
-}); 
+});
 
 const interviewReportSchema = new mongoose.Schema({
     jobDescription: {
@@ -98,8 +98,12 @@ const interviewReportSchema = new mongoose.Schema({
     skillGaps: [skillGapSchema],
     preparationPlan: [preparationPlanSchema],
     user: {
-        type: mongoose.Schema.Types.ObjectId, 
+        type: mongoose.Schema.Types.ObjectId,
         ref: "user"
+    },
+    title: {
+        type: String,
+        required: [true, "Job title is required"]
     }
 }, {
     timestamps: true,
