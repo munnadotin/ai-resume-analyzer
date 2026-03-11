@@ -1,19 +1,11 @@
 import axios from "axios";
 import { api } from "./api";
 
-type props = {
-    data: {
-        selfDescription: string;
-        jobDescription: string;
-        resume: File | string | Blob;
-    }
-}
-
 /**
  * @description generate interview report
  * @route POST /api/interview
  */
-export async function generateInterviewReport({ data }: props) {
+export async function generateInterviewReport(data: FormData) {
     try {
         const res = await api.post('/api/interview', data);
         return res.data;

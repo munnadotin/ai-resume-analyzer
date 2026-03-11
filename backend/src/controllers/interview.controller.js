@@ -1,6 +1,7 @@
 import { createRequire } from "module";
 import { generateInterviewReport } from "../services/ai.service.js";
 import { interviewModel } from "../models/interview.model.js";
+import mongoose from "mongoose";
 const require = createRequire(import.meta.url);
 const pdf = require("pdf-parse");
 
@@ -49,26 +50,40 @@ export async function interviewController(req, res) {
  * @description Controller for fetch report by id
  * @route GET /api/interview/report/id
  */
+
 export async function interviewReportById(req, res) {
     try {
-        const interviewReport = await interviewModel.findOne({ _id: req.params.id, user: req.user._id });
+
+        const { id } = req.params;
+
+        // ObjectId validation
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({
+                message: "Invalid interview id"
+            });
+        }
+
+        const interviewReport = await interviewModel.findOne({
+            _id: id,
+            user: req.user._id
+        });
 
         if (!interviewReport) {
             return res.status(404).json({
                 message: "Interview report not found"
-            })
+            });
         }
 
         res.status(200).json({
             message: "Interview report fetched successfully",
             interviewReport
-        })
+        });
 
     } catch (error) {
-        console.log(error)
+        console.log(error);
         res.status(500).json({
             message: "Internal server error"
-        })
+        });
     }
 }
 

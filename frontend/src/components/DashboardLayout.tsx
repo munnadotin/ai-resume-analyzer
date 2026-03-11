@@ -1,4 +1,5 @@
-import { FileUser, Luggage, UploadCloud, Sparkles, ArrowRight, CheckCircle2 } from "lucide-react";
+import { generateInterviewReport } from "@/api/interview.api";
+import { FileUser, Luggage, UploadCloud, Sparkles, ArrowRight, CheckCircle2, Loader2 } from "lucide-react";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form"
 import { useNavigate } from "react-router-dom";
@@ -12,6 +13,7 @@ type FormValue = {
 export default function DashboardLayout() {
     const { register, handleSubmit, setValue, formState: { errors } } = useForm<FormValue>();
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
+    const [Loading, setLoading] = useState(false);
     const [isDragging, setIsDragging] = useState(false);
     const navigate = useNavigate();
 
@@ -46,6 +48,7 @@ export default function DashboardLayout() {
 
     async function onSubmit(data: FormValue) {
         try {
+            setLoading(true);
             const { jobDescription, resume, selfDescription } = data;
 
             const formData = new FormData();
@@ -53,15 +56,12 @@ export default function DashboardLayout() {
             formData.append("selfDescription", selfDescription);
             formData.append("resume", resume);
 
-            console.log(formData)
-            // const res = await api.post(
-            //     "/api/interview/get-resume-text",
-            //     formData
-            // );
-
-            // console.log(res.data);
+            const res = await generateInterviewReport(formData);
+            navigate(`/interview/${res.interviewReport._id}`);
         } catch (error) {
             console.log(error);
+        } finally {
+            setLoading(false);
         }
     }
     return (
@@ -209,7 +209,7 @@ export default function DashboardLayout() {
                                 type="submit"
                                 className="group relative inline-flex items-center gap-2 bg-indigo-600 text-white font-medium px-8 py-3 rounded-full transition-all duration-300 cursor-pointer active:scale-102"
                             >
-                                <span>Generate Interview Plan</span>
+                                {Loading ? <p className="flex items-center justify-center animate-spin text-white"><Loader2 className="h-5 w-5" /></p> : <span>Generate Interview Plan</span>}
                                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                             </button>
                         </div>

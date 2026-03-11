@@ -1,12 +1,33 @@
-import { useState } from 'react';
-import { Users, AlertTriangle, Calendar, TrendingUp, CheckCircle2, Code2, Globe, Clock1, SignalMedium } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { Users, AlertTriangle, Calendar, TrendingUp, CheckCircle2, Code2, Globe } from 'lucide-react';
 import type { InterviewData } from '@/types/dashboard.type';
 import RenderQuestions from './RenderQuestions';
 import PreparationPlan from './PreparationPlan';
 import SkillGaps from './SkillGaps';
+import { useParams } from 'react-router-dom';
+import { getInterviewReport } from '@/api/interview.api';
 
-export default function InterviewResults({ data }: { data: InterviewData }) {
+export default function InterviewResults() {
     const [selectedCategory, setSelectedCategory] = useState('all');
+    const [data, setData] = useState<InterviewData | null>(null);
+    const { id } = useParams();
+
+    useEffect(() => {
+        async function getReport() {
+            try {
+                if (!id) return;
+                const res = await getInterviewReport(id);
+                setData(res.interviewReport)
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        getReport();
+    }, [id]);
+
+    if(!data){
+        return <p>Report Loading...</p>
+    }
 
     const getSeverityColor = (severity: string) => {
         switch (severity) {

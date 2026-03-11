@@ -11,7 +11,8 @@ type props = {
 
 export default function RecentInterviewReports({ interviewReports }: props) {
     const navigate = useNavigate();
-    
+    if (interviewReports.length == 0) return <p>No inteview reports</p>;
+
     return (
         <div className="mt-6">
             <h2 className="text-lg font-semibold mb-4">Recent Interviews</h2>
