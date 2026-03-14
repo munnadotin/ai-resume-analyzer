@@ -97,7 +97,7 @@ An AI-powered web application that analyzes a candidate's resume against a targe
 Clone the repository:
 
 ```bash
-git clone https://github.com/your-username/ai-resume-analyzer.git
+git clone https://github.com/munnadotin/ai-resume-analyzer.git
 ```
 
 Install dependencies:
